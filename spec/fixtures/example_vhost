@@ -1,0 +1,5 @@
+<VirtualHost *:80>
+    ServerName driver.local
+    DocumentRoot /Users/ryanbigg/Sites/driver
+    RailsEnv production
+</VirtualHost>

@@ -1,0 +1,34 @@
+body {
+  background:#efefef;
+  padding-left: 5%;
+  text-align: center;
+}
+#content {
+  border: 1px solid #9a9a9a;
+  width: 95%;
+}
+
+#content td {
+  padding: 5px;
+  vertical-align: top;
+}
+
+#hosts, #buttons {
+  background: #dedede;
+  width: 20%;
+  text-align: left;
+}
+
+#config {
+  border-left: 1px solid #bcbcbc;
+  text-align: left;
+}
+
+p label {
+  float: left;
+  width: 8em;
+}
+
+input[type=text] {
+  width: 40em;
+}
