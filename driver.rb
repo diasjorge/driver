@@ -3,19 +3,7 @@ require 'erb'
 require 'config'
 
 get '/' do
-  # Retreives a list of hosts from ghost, and their configurations.
-  @hosts = {}
-  counter = 1
-  `ghost list`.split("\n")[1..-1].sort.each do |host|
-    key, value = host.split(" -> ")
-    key.strip!
-    next if !File.exist?(Driver.config_path(key))
-    @hosts[key] = {}
-    @hosts[key][:host]   = key
-    @hosts[key][:name]   = Driver.name_for(key)
-    @hosts[key][:id]     = counter += 1 
-    @hosts[key][:config] = Driver.config_for(@hosts[key][:host])
-  end
+  get_hosts
   erb :index
 end
 
@@ -61,7 +49,28 @@ get '/folders/*' do
   erb :folders, :layout => false
 end
 
+get '/hosts' do
+  get_hosts
+  erb :hosts
+end
+
 private
+
+  def get_hosts
+    # Retreives a list of hosts from ghost, and their configurations.
+     @hosts = {}
+     counter = 1
+     `ghost list`.split("\n")[1..-1].sort.each do |host|
+       key, value = host.split(" -> ")
+       key.strip!
+       next if !File.exist?(Driver.config_path(key))
+       @hosts[key] = {}
+       @hosts[key][:host]   = key
+       @hosts[key][:name]   = Driver.name_for(key)
+       @hosts[key][:id]     = counter += 1 
+       @hosts[key][:config] = Driver.config_for(@hosts[key][:host])
+     end
+   end
 
   def load_config(name)
     @config = Driver.parse_config(Driver.config_for(name))

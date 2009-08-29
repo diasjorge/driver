@@ -13,10 +13,12 @@
     <div id='message'></div>
     <table id='content' cellspacing='0' cellpadding='0'>
       <tr>
-        <td id='hosts'>
-          <% @hosts.sort_by(&:first).each do |name, config| %>
-            <div id='host_<%= config[:id] %>' onclick='selected(this, "<%= config[:host] %>")'><%= config[:host] %></div>
-          <% end %>
+        <td id='hosts_container'>
+          <ul id='hosts'>
+            <% @hosts.sort_by(&:first).each do |name, config| %>
+              <li id='host_<%= config[:id] %>' onclick='selected(this, "<%= config[:host] %>")'><%= config[:host] %></li>
+            <% end %>
+          </ul>
         </td>
         <td id='config' rowspan='2'>
           Config!
@@ -27,8 +29,17 @@
       </tr>
       <tr>
         <td id='buttons'>
-          <a onclick='new_form()' href='#'>New</a>
-          <a onclick='restart()' href='#'>Restart</a>
+          <div>
+            <a onclick='new_form()' href='#'>
+              <img src='/add.png' alt='New' title='New'>
+            </a>
+          </div>
+          
+          <div>
+            <a onclick='restart()' href='#'>
+              <img src='/restart.png' alt='Restart' title='Restart'>
+            </a>
+          </div>
         </td>
       </tr>
     </table>

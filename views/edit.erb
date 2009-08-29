@@ -1,3 +1,4 @@
+<h1>Editing Passenger</h1>
 <form action='/update/<%= params[:name] %>' id='config_form'>
   <input type='hidden' id='config' name='config' value='<%= params[:name] %>'>
   <%= text_fields_for "ServerName", "DocumentRoot" %>

@@ -4,17 +4,31 @@ body {
   text-align: center;
   font: 12pt Helvetica;
 }
+
+a {
+  color:white;
+}
+
+img {
+  margin: 3px;
+  border: 0;
+}
+
+h1 {
+  font-size: 16pt;
+}
+
 #content {
   border: 1px solid #9a9a9a;
   width: 95%;
 }
 
-#hosts, #config, #folders {
+#hosts_container, #config, #folders {
   vertical-align: top;
 }
 
 #folders {
-  border-left: 5px solid black;
+  border-left: 2px solid #4E0879;
   background: #9a9a9a;
   text-align: left;
   width: 25%;
@@ -28,7 +42,7 @@ body {
   border-bottom: 1px solid #4E0879;
 }
 
-#folders .folder {
+#folders .folder, #hosts li {
   padding: 5px;
   background: #7A0FBC;
   border-bottom: 1px solid #9E11F5;
@@ -36,18 +50,35 @@ body {
   margin: 0px;
 }
 
-#hosts div, #config {
+ul#hosts {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+#hosts li, #config {
   padding: 5px;
 }
 
 #hosts, #buttons {
-  background: #dedede;
-  width: 20%;
   text-align: left;
 }
 
+#hosts_container {
+  width: 20%;
+}
+
+
+#buttons div {
+  width: 49%;
+  text-align: center;
+  float: left;
+  height: 100%;
+}
+
 #hosts .selected {
-  background: #9a9a9a;
+  background: #9E11F5;
   font-weight:bold;
 }
 
