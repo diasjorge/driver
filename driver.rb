@@ -32,6 +32,12 @@ post '/update' do
   Driver.write_config(@config.merge!(params))
 end
 
+get '/folders/*' do
+  @path = "/" + params[:splat].first
+  @folders = (Dir.entries(@path) - ["."]).select { |e| File.directory?(File.join(@path, e)) }
+  erb :folders, :layout => false
+end
+
 private
 
   def load_config(name)
