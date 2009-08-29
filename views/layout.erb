@@ -14,17 +14,21 @@
     <table id='content' cellspacing='0' cellpadding='0'>
       <tr>
         <td id='hosts'>
-          <% @hosts.each do |name, config| %>
-            <span id='host_<%= config[:id] %>' onclick='selected(this, "<%= config[:host] %>")'><%= config[:host] %></span>
+          <% @hosts.sort_by(&:first).each do |name, config| %>
+            <div id='host_<%= config[:id] %>' onclick='selected(this, "<%= config[:host] %>")'><%= config[:host] %></div>
           <% end %>
         </td>
-        <td id='config'>
+        <td id='config' rowspan='2'>
           Config!
+        </td>
+        <td id='folders' rowspan='2'>
+          
         </td>
       </tr>
       <tr>
         <td id='buttons'>
           <a onclick='new_form()' href='#'>New</a>
+          <a onclick='restart()' href='#'>Restart</a>
         </td>
       </tr>
     </table>

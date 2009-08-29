@@ -17,21 +17,46 @@ class Driver
     
     def parse_config(config)
       real_config = {}
-      config.split("\n")[1..-2].map! { |l| l.strip.split(" ") }.each do |key, value|
+      config.strip.split("\n")[2..-2].map! { |l| l.strip.split(" ") }.each do |key, value|
         real_config[key] = value
       end
       real_config
     end
-    
-    def write_config(config)
-      FileUtils.rm(config_path(config["config"])) rescue nil
-      File.open(config_path(config["ServerName"]), "w+") do |f|
-        f.write("<VirtualHost *:80>\n#{output_config(config)}\n</VirtualHost>")
+  
+    # Ugliest method of this entire bastard application.
+    # I apologise.  
+    def write_config(config, password)
+      puts config.inspect
+      output = "NameVirtualHost *:80\n<VirtualHost *:80>\n#{output_config(config)}\n</VirtualHost>".split("\n")
+      # Start the sudo
+      sudo("ls", password)
+      `sudo sh -c  \"echo "" > #{config_path(config["ServerName"])}\"`
+      output.each do |line|
+        command = "sudo sh -c \"echo '#{replace_quotes(line)}' >> #{config_path(config["ServerName"])}\""
+        `#{command}`
       end
+      sudo("ghost rm #{config["ServerName"]}", password)
+      sudo("ghost add #{config["ServerName"]}", password)
+      restart_apache(password)
+    end
+    
+    def restart_apache(password)
+      sudo("apachectl -k restart", password)
+    end
+    
+    
+    def sudo(command, password)
+      `echo "#{password}" | sudo -S #{command}`
+    end
+    
+    def replace_quotes(line)
+      line.gsub("\"", "\\\"")
     end
     
     def output_config(config)
+      config.delete("password")
       config.delete("config")
+      config.delete("selected")
       output = ""
       config.each do |key, value|
         output << "#{key} #{value}\n"

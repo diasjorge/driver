@@ -2,21 +2,57 @@ body {
   background:#efefef;
   padding-left: 5%;
   text-align: center;
+  font: 12pt Helvetica;
 }
 #content {
   border: 1px solid #9a9a9a;
   width: 95%;
 }
 
-#content td {
-  padding: 5px;
+#hosts, #config, #folders {
   vertical-align: top;
+}
+
+#folders {
+  border-left: 5px solid black;
+  background: #9a9a9a;
+  text-align: left;
+  width: 25%;
+  background: #9E11F5;
+}
+
+#folders .title {
+  padding: 5px;
+  font-weight: bold;
+  color: white;
+  border-bottom: 1px solid #4E0879;
+}
+
+#folders .folder {
+  padding: 5px;
+  background: #7A0FBC;
+  border-bottom: 1px solid #9E11F5;
+  color: white;
+  margin: 0px;
+}
+
+#hosts div, #config {
+  padding: 5px;
 }
 
 #hosts, #buttons {
   background: #dedede;
   width: 20%;
   text-align: left;
+}
+
+#hosts .selected {
+  background: #9a9a9a;
+  font-weight:bold;
+}
+
+#folders {
+  display: none;
 }
 
 #config {

@@ -1,15 +1,26 @@
 function selected(element, name) {
-  $('#' + element.id).wrap("<strong></strong>");
+  $('#hosts div').removeClass('selected');
+  $('#' + element.id).addClass('selected');
   $.get('/edit/' + name, function(data){
     $('#config').html(data);
   });
 }
+
+// buttons!
 
 function new_form() {
   $.get('/new', function(data){
     $('#config').html(data);
   });
 }
+
+function restart() {
+  $.get('/restart', function(data) {
+    $('config').html(data);
+  });
+}
+
+// actions!
 
 function update() {
   post = $('#config_form').serialize();
@@ -26,6 +37,9 @@ function create() {
 }
 
 function folder_selector(directory) {
+  $("#DocumentRoot").click(function () {
+    $('#folders').show();
+  });
   $.get('/folders' + directory, function(data){
     $('#folders').html(data);
   });
@@ -33,9 +47,8 @@ function folder_selector(directory) {
 
 function enter_folder(directory) {
   if (directory == "..") {
-    path = $('#current_path').val().split("/");
-    path.pop();
-    current_path = path.join("/");
+    enter_path = $('#current_path').val().split("/");
+    current_path = enter_path.join("/");
   }
   else {
     current_path = $('#current_path').val();
@@ -57,6 +70,5 @@ function selected_path(directory) {
     path = path.join("/");
   }
   path = path.replace("//", "/");
-  
   $('#DocumentRoot').val(path);
 }

@@ -6,20 +6,17 @@ get '/' do
   # Retreives a list of hosts from ghost, and their configurations.
   @hosts = {}
   counter = 1
-  `ghost list`.split("\n")[1..-1].each do |host|
+  `ghost list`.split("\n")[1..-1].sort.each do |host|
     key, value = host.split(" -> ")
     key.strip!
+    next if !File.exist?(Driver.config_path(key))
     @hosts[key] = {}
     @hosts[key][:host]   = key
     @hosts[key][:name]   = Driver.name_for(key)
     @hosts[key][:id]     = counter += 1 
-    @hosts[key][:config] = Driver.config_for(@hosts[key][:name])
+    @hosts[key][:config] = Driver.config_for(@hosts[key][:host])
   end
   erb :index
-end
-
-get '/new' do
-  erb :new, :layout => false
 end
 
 get '/edit/:name' do
@@ -29,11 +26,37 @@ end
 
 post '/update' do
   load_config(params[:config])
-  Driver.write_config(@config.merge!(params))
+  password = params.delete("password")
+  merged_params = @config.merge!(params)
+  `ghost rm #{params[:config]}`
+  `ghost add #{merged_params["ServerName"]}`
+  Driver.write_config(merged_params, password)
+end
+
+get '/new' do
+  erb :new, :layout => false
+end
+
+post '/create' do
+  output = params.inspect
+  password = params.delete("password")
+  Driver.write_config(params, password)
+  output
+end
+
+get '/restart' do
+  erb :restart, :layout => false
+end
+
+post '/restart' do
+  (Dir.entries(Driver.vhost_directory) - ['..', '.']).each do |host|
+    `echo #{params[:password]} | sudo ghost add #{host.gsub(".conf")}`
+  end
+  Driver.restart_apache(params[:password])
 end
 
 get '/folders/*' do
-  @path = "/" + params[:splat].first
+  @path = "/" + params[:splat].first.gsub("//", "/")
   @folders = (Dir.entries(@path) - ["."]).select { |e| File.directory?(File.join(@path, e)) }
   erb :folders, :layout => false
 end

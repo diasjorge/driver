@@ -1,3 +1,5 @@
+NameVirtualHost *:80
+
 <VirtualHost *:80>
     ServerName driver.local
     DocumentRoot REPLACE_ME
