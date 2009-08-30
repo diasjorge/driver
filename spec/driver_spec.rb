@@ -32,4 +32,8 @@ describe Driver do
     new_config = File.read(path)
     new_config.should eql("<VirtualHost *:80>\nServerName otherdriver.local\nDocumentRoot /Users/ryanbigg/Sites/driver\n\n</VirtualHost>")
   end
+  
+  it "should not be able to run a sudo command with an invalid password" do
+    lambda { Driver.sudo("ls", "") }.should raise_error(Driver::InvalidPassword)
+  end
 end

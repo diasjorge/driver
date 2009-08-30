@@ -6,6 +6,20 @@ function selected(element, name) {
   });
 }
 
+function display_message(data) {
+  if (data.match(/^Error:/)) {
+    $('#message').removeclass('success');
+    $('#message').addClass('error');
+    $('#message').html(data.split(":")[1]);
+  }
+  else {
+    $('#message').removeClass('error');
+    $('#message').addClass('success');
+    $('#message').html(data);
+  };
+  $('#message').show();
+}
+
 // buttons!
 
 function new_form() {
@@ -20,12 +34,13 @@ function restart() {
   });
 }
 
+
 // actions!
 
 function update() {
   post = $('#config_form').serialize();
   $.post('/update', post, function(data){
-    $('#message').html("Update successful!");
+    display_message(data);
   });
 }
 
@@ -40,6 +55,12 @@ function create() {
       $('#hosts').html(hosts);
     });
     $('#message').html("Passenger created!");
+  });
+};
+
+function remove(name) {
+  $.post('/delete?name=' + name, function(data) {
+    $('#message').html(data);
   });
 }
 

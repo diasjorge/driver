@@ -1,13 +1,16 @@
 <h1>Editing Passenger</h1>
-<form action='/update/<%= params[:name] %>' id='config_form'>
+<form id='config_form'>
   <input type='hidden' id='config' name='config' value='<%= params[:name] %>'>
   <%= text_fields_for "ServerName", "DocumentRoot" %>
-  <p>
-    <label for='password'>Password:</label>
-    <input type='password' name='password' id='password'>
-  </p>
   <script>$(document).ready(function() { folder_selector("<%= @config['DocumentRoot'] %>"); });</script>
+  <% if @password_required %>
+    <p>
+      <label for='password'>Password:</label>
+      <input type='password' name='password' id='password'>
+    </p>
+  <% end %>
   <p>
-    <input type='submit' name='submit' value='submit' onclick='update(); return false'>
+    <input type='submit' name='submit' value='Update' onclick='update(); return false'>
+    <input type='button' name='Delete' onclick='remove("<%= params[:name] %>")' value="delete">
   </p>
 </form>

@@ -2,6 +2,8 @@ require 'fileutils'
 require 'yaml'
 
 class Driver
+  class InvalidPassword < Exception; end;
+  
   class << self 
     def config
       File.read("driver_conf")
@@ -26,18 +28,25 @@ class Driver
     # Ugliest method of this entire bastard application.
     # I apologise.  
     def write_config(config, password)
-      puts config.inspect
       output = "NameVirtualHost *:80\n<VirtualHost *:80>\n#{output_config(config)}\n</VirtualHost>".split("\n")
       # Start the sudo
-      sudo("ls", password)
+      sudo_output = sudo("ls", password)
+      puts sudo_output
       `sudo sh -c  \"echo "" > #{config_path(config["ServerName"])}\"`
       output.each do |line|
         command = "sudo sh -c \"echo '#{replace_quotes(line)}' >> #{config_path(config["ServerName"])}\""
         `#{command}`
       end
-      sudo("ghost rm #{config["ServerName"]}", password)
-      sudo("ghost add #{config["ServerName"]}", password)
-      restart_apache(password)
+      fork do
+        sleep(3)
+        sudo("ghost rm #{config["ServerName"]}", password)
+        sudo("ghost add #{config["ServerName"]}", password)
+        restart_apache(password)
+      end
+    end
+    
+    def delete(config)
+      sudo("ls", password)
     end
     
     def restart_apache(password)
@@ -46,7 +55,8 @@ class Driver
     
     
     def sudo(command, password)
-      `echo "#{password}" | sudo -S #{command}`
+      output = `(echo \"#{password}\" | sudo -S #{command}) 2>&1` 
+      raise Driver::InvalidPassword if output.include?("incorrect password attempts")
     end
     
     def replace_quotes(line)

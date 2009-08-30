@@ -9,20 +9,39 @@ end
 
 get '/edit/:name' do
   load_config(params[:name])
-  erb :edit, :layout => false
+  begin
+    Driver.sudo("ls", "")
+    @password_required = false
+  rescue Driver::InvalidPassword
+    @password_required = true
+  ensure
+    return(erb(:edit, :layout => false))
+  end
 end
 
 post '/update' do
-  load_config(params[:config])
-  password = params.delete("password")
-  merged_params = @config.merge!(params)
-  `ghost rm #{params[:config]}`
-  `ghost add #{merged_params["ServerName"]}`
-  Driver.write_config(merged_params, password)
+  begin
+    load_config(params[:config])
+    password = params.delete("password")
+    merged_params = @config.merge!(params)
+    `ghost rm #{params[:config]}`
+    `ghost add #{merged_params["ServerName"]}`
+    Driver.write_config(merged_params, password)
+    return "Update successful!"
+  rescue Driver::InvalidPassword
+    "Error: You have specified an incorrect password. Please try again."
+  end
 end
 
 get '/new' do
-  erb :new, :layout => false
+  begin
+    Driver.sudo("ls", "")
+    @password_required = false
+  rescue Driver::InvalidPassword
+    @password_required = true
+  ensure
+    return(erb(:new, :layout => false))
+  end
 end
 
 post '/create' do
@@ -30,6 +49,10 @@ post '/create' do
   password = params.delete("password")
   Driver.write_config(params, password)
   output
+end
+
+post '/delete' do
+  Driver.delete(Driver.config_path(params[:name]))
 end
 
 get '/restart' do

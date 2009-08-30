@@ -18,6 +18,27 @@ h1 {
   font-size: 16pt;
 }
 
+.error, .success {
+  width: 95%;
+  margin-bottom: 10px;
+  padding: 5px;
+  font-weight: bold;
+}
+
+.error {
+  background: #FF5F62;
+  border-bottom: 2px solid #9B3A3D;
+  border-top: 2px solid #9B3A3D;
+  color: white;
+}
+
+.success {
+  background: #70D300;
+  border-bottom: 2px solid #379B00;
+  border-top: 2px solid #379B00;
+  color: white;
+}
+
 #content {
   border: 1px solid #9a9a9a;
   width: 95%;
