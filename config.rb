@@ -39,7 +39,7 @@ class Driver
       sudo_output = sudo("ls", password)
       `sudo sh -c  \"echo "" > #{config_path(config["ServerName"])}\"`
       output.each do |line|
-        command = "sudo sh -c \"echo '#{replace_quotes(line)}' >> #{config_path(config["ServerName"])}\""
+        command = "sudo sh -c \"echo '  #{replace_quotes(line)}' >> #{config_path(config["ServerName"])}\""
         `#{command}`
       end
       sudo("ghost rm #{config["ServerName"]}")
