@@ -17,7 +17,7 @@
       <tr>
         <td id='hosts_container'>
           <ul id='hosts'>
-            <% @hosts.sort_by(&:first).each do |name, config| %>
+            <% @hosts.sort_by { |host| host.first }.each do |name, config| %>
               <li id='host_<%= config[:id] %>' onclick='selected(this, "<%= config[:host] %>")'><%= config[:host] %></li>
             <% end %>
           </ul>
