@@ -32,6 +32,8 @@ class Driver
     # Ugliest method of this entire bastard application.
     # I apologise.  
     def write_config(config, password)
+      # Since we can run both Rack apps and Rails apps (same thing?) through passenger, we can set both variables.
+      config["RackEnv"] = config["RailsEnv"]
       output = "NameVirtualHost *:80\n<VirtualHost *:80>\n#{output_config(config)}\n</VirtualHost>".split("\n")
       # Start the sudo
       sudo_output = sudo("ls", password)

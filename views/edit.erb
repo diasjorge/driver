@@ -2,6 +2,15 @@
 <form id='config_form'>
   <input type='hidden' id='config' name='config' value='<%= params[:name] %>'>
   <%= text_fields_for "ServerName", "DocumentRoot" %>
+  
+  <strong>Environment</strong>
+  <p>
+    <label for='environment_development'>Development</label>
+    <input type='radio' name='RailsEnv' id='environment_development' value='development' <%= "checked='checked'" if @config['RackEnv'] == 'development' %><br>
+    <label for='environment_production'>Production</label>
+    <input type='radio' name='RailsEnv' id='environment_productino' value='production' <%= "checked='checked'" if @config['RackEnv'] == 'production' %>>
+  </p>
+  
   <script>$(document).ready(function() { folder_selector("<%= @config['DocumentRoot'] %>"); });</script>
   <% if @password_required %>
     <p>

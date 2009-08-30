@@ -1,6 +1,14 @@
 <h1>New Passenger</h1>
 <form action='/create' id='config_form'>
   <%= text_fields_for "DocumentRoot", "ServerName"%>
+  
+  <p>
+    <label for='environment_development'>Development</label>
+    <input type='radio' name='RailsEnv' id='environment_development' value='development' checked='true'><br>
+    <label for='environment_production'>Production</label>
+    <input type='radio' name='RailsEnv' id='environment_productino' value='production'>
+  </p>
+  
   <% if @password_required %>
     <p>
       <label for='password'>Password:</label>
