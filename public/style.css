@@ -90,6 +90,9 @@ ul#hosts {
   width: 20%;
 }
 
+#buttons {
+  vertical-align: bottom;
+}
 
 #buttons div {
   width: 49%;
