@@ -2,7 +2,11 @@ require 'fileutils'
 require 'yaml'
 
 class Driver
-  class InvalidPassword < Exception; end;
+  class InvalidPassword < Exception
+    def message
+      "Error: You have specified an incorrect password. Please try again."
+    end
+  end
   
   class << self 
     def config
@@ -31,30 +35,27 @@ class Driver
       output = "NameVirtualHost *:80\n<VirtualHost *:80>\n#{output_config(config)}\n</VirtualHost>".split("\n")
       # Start the sudo
       sudo_output = sudo("ls", password)
-      puts sudo_output
       `sudo sh -c  \"echo "" > #{config_path(config["ServerName"])}\"`
       output.each do |line|
         command = "sudo sh -c \"echo '#{replace_quotes(line)}' >> #{config_path(config["ServerName"])}\""
         `#{command}`
       end
+      sudo("ghost rm #{config["ServerName"]}")
+      sudo("ghost add #{config["ServerName"]}")
+      restart_apache
+    end
+    
+    def restart_apache
+      # Fork this process, let it finish running and then in 3 seconds time kick apache in the balls.
+      # Why 3? It came to me in a dream. It's also the longest I'm willing to wait.
       fork do
         sleep(3)
-        sudo("ghost rm #{config["ServerName"]}", password)
-        sudo("ghost add #{config["ServerName"]}", password)
-        restart_apache(password)
+        sudo("apachectl -k restart")
       end
     end
     
-    def delete(config)
-      sudo("ls", password)
-    end
     
-    def restart_apache(password)
-      sudo("apachectl -k restart", password)
-    end
-    
-    
-    def sudo(command, password)
+    def sudo(command, password='')
       output = `(echo \"#{password}\" | sudo -S #{command}) 2>&1` 
       raise Driver::InvalidPassword if output.include?("incorrect password attempts")
     end

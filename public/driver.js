@@ -47,20 +47,23 @@ function update() {
 function create() {
   post = $('#config_form').serialize();
   $.post('/create', post, function(data){
-    $('#message').html("Passenger created!");
-  });
-  
-  $.post('/create', post, function(data){
     $.get('/hosts', function(hosts) {
       $('#hosts').html(hosts);
+      $('#config').html("");
+      $('#folders').hide();
     });
-    $('#message').html("Passenger created!");
+    display_message(data);
   });
 };
 
 function remove(name) {
   $.post('/delete?name=' + name, function(data) {
-    $('#message').html(data);
+    display_message(data);
+    $.get('/hosts', function(hosts) {
+      $('#hosts').html(hosts);
+      $('#config').html("");
+      $('#folders').hide();
+    });
   });
 }
 

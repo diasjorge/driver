@@ -28,8 +28,9 @@ post '/update' do
     `ghost add #{merged_params["ServerName"]}`
     Driver.write_config(merged_params, password)
     return "Update successful!"
-  rescue Driver::InvalidPassword
-    "Error: You have specified an incorrect password. Please try again."
+  rescue Driver::InvalidPassword => e
+    e.message
+    
   end
 end
 
@@ -45,14 +46,28 @@ get '/new' do
 end
 
 post '/create' do
-  output = params.inspect
   password = params.delete("password")
   Driver.write_config(params, password)
-  output
+  "Successfully created!"
 end
 
 post '/delete' do
-  Driver.delete(Driver.config_path(params[:name]))
+  begin
+    # begin sudo'ing
+    Driver.sudo("ls", params[:password]) if params[:password]
+    # Remove config
+    if File.exist?(Driver.config_path(params[:name]))
+      Driver.sudo("rm -f #{Driver.config_path(params[:name])}", params[:password])
+    end
+    # Remove ghost entry
+    Driver.sudo("ghost rm #{params[:name]}")
+    # Restart Apache
+    Driver.restart_apache
+    "The selected entry has been deleted."
+  # For when sudo breaks.
+  rescue Driver::InvalidPassword => e
+    e.message
+  end  
 end
 
 get '/restart' do
@@ -61,9 +76,9 @@ end
 
 post '/restart' do
   (Dir.entries(Driver.vhost_directory) - ['..', '.']).each do |host|
-    `echo #{params[:password]} | sudo ghost add #{host.gsub(".conf")}`
+    Driver.sudo("ghost add #{host.gsub(".conf")}", params[:password])
   end
-  Driver.restart_apache(params[:password])
+  Driver.restart_apache
 end
 
 get '/folders/*' do
@@ -74,7 +89,7 @@ end
 
 get '/hosts' do
   get_hosts
-  erb :hosts
+  erb :hosts, :layout => false
 end
 
 private
