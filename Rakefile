@@ -18,7 +18,6 @@ task :install do
       driver_conf = "/etc/apache2/other/driver.conf"
       if !File.exist?(driver_conf)
         File.open(driver_conf, "w+") do |file|
-          puts "Writing: #{Driver.config}"
           file.write(Driver.config)
         end
       end
