@@ -1,10 +1,11 @@
-Driver is for setting up your passenger vhosts. Kind of like Passenger Pref Pane, but less hangy.
+Driver is for setting up your passenger vhosts. The original idea was created when Passenger Preference Pane was hanging on my Snow Leopard machine. Apparently this is no longer the case with the latest passenger pane build. This project still lives, as there is room to make it Linux-compatible.
 
 ## Install
 
-First off you're going to need to install the `sinatra` and `ghost` gems: `sudo gem install sinatra ghost` will do that for you.
+First off you're going to need to install the `sinatra` and `ghost` gems: `sudo gem install sinatra ghost` will do that for you. Sinatra is the framework the application uses for hosting the app and Ghost is the utility it uses for adding hosts to point at 127.0.0.1.
 
-Next, run `sudo rake install` then go to `http://driver.local` in your browser.
+Next, run `sudo rake install` which should load up `http://driver.local` for you.
+
 
 ## Why is it broken?
 
