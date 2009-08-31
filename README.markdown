@@ -2,7 +2,9 @@ Driver is for setting up your passenger vhosts. Kind of like Passenger Pref Pane
 
 ## Install
 
-Run `sudo rake install` then go to `http://driver.local` in your browser.
+First off you're going to need to install the `sinatra` and `ghost` gems: `sudo gem install sinatra ghost` will do that for you.
+
+Next, run `sudo rake install` then go to `http://driver.local` in your browser.
 
 ## Why is it broken?
 
