@@ -80,28 +80,17 @@ function enter_folder(directory) {
   if (directory == "..") {
     enter_path = $('#current_path').val().split("/");
     enter_path.pop();
-    current_path = enter_path.join("/");
-    $.get('/folders' + current_path, function(data){
+    path = enter_path.join("/");
+    $.get('/folders' + path, function(data){
       $('#folders').html(data);
     });
   }
   else {
     current_path = $('#current_path').val();
+    path = current_path + '/' + directory;
     $.get('/folders' + current_path + '/' + directory, function(data){
       $('#folders').html(data);
     });
-  }
-}
-
-function selected_path(directory) {
-  if (directory != "..") {
-    current_path = $('#current_path').val();
-    path = current_path + '/' + directory;
-  }
-  else {
-    path = $('#current_path').val().split("/");
-    path.pop();
-    path = path.join("/");
   }
   path = path.replace("//", "/");
   $('#DocumentRoot').val(path);

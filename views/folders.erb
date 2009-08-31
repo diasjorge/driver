@@ -2,5 +2,5 @@
   <input type='hidden' id='selected' name='selected'>
   <div class='title'><%= @path %></div>
 <% for folder in @folders %>
-  <div class='folder' ondblclick='enter_folder("<%= folder %>")' onclick='selected_path("<%= folder %>")'><%= folder %></div>
+  <div class='folder' onclick='enter_folder("<%= folder %>")'><%= folder %></div>
 <% end %>
