@@ -28,6 +28,10 @@ class Driver
       end
       real_config
     end
+    
+    def sample_config(config)
+      "<VirtualHost *:80>\n#{output_config(config)}\n<Directory \"#{config["DocumentRoot"]}\">\nOrder allow,deny\nAllow from all\n</Directory>\n</VirtualHost>"
+    end
   
     # Ugliest method of this entire bastard application.
     # I apologise.  
