@@ -8,7 +8,7 @@ function selected(element, name) {
 
 function display_message(data) {
   if (data.match(/^Error:/)) {
-    $('#message').removeclass('success');
+    $('#message').removeClass('success');
     $('#message').addClass('error');
     $('#message').html(data.split(":")[1]);
   }
