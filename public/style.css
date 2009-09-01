@@ -123,3 +123,9 @@ p label {
 input[type=text] {
   width: 40em;
 }
+
+.error_for_field {
+  font-weight: bold;
+  color: #ee0000;
+  display: none;
+}

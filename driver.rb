@@ -35,6 +35,7 @@ post '/update' do
 end
 
 get '/new' do
+  @config = {}
   begin
     Driver.sudo("ls", "")
     @password_required = false
@@ -114,18 +115,18 @@ private
     @config = Driver.parse_config(Driver.config_for(name))
   end
   
-  def text_fields_for(*field)
-    output = ""
-    field.each do |field|
-      value = @config.nil? ? "" : @config[field]
-      output << "<p><label for='#{field}'>#{friendly_name(field)}:</label><input type='text' name='#{field}' id='#{field}' value='#{value}'></p>"
-    end
-    output
+  def text_field(name)
+    "<p>
+  <label for='#{name}'>#{friendly_name(name)}</label>
+  <input type='text' name='#{name}' id='#{name}' value='#{@config[name]}'><br>
+  <span id='errors_for_#{name}' class='error_for_field'>asfd</span>
+</p>"
+
   end
   
   def friendly_name(field)
     case field
-      when "ServerName" then "Name"
-      when "DocumentRoot" then "Document Root"
+      when "ServerName" then "Server Name:"
+      when "DocumentRoot" then "Document Root:"
     end
   end

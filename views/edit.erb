@@ -1,8 +1,9 @@
 <h1>Editing Passenger</h1>
 <form id='config_form'>
   <input type='hidden' id='config' name='config' value='<%= params[:name] %>'>
-  <%= text_fields_for "ServerName", "DocumentRoot" %>
   
+  <%= text_field "ServerName" %>
+  <%= text_field "DocumentRoot" %>  
   <strong>Environment</strong>
   <p>
     <label for='environment_development'>Development</label>

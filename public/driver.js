@@ -94,4 +94,22 @@ function enter_folder(directory) {
   }
   path = path.replace("//", "/");
   $('#DocumentRoot').val(path);
+  parts = $('#DocumentRoot').val().split("/");
+  
+  // To automatically fill out the ServerName.
+  second_to_last_part = parts[parts.length-2];
+  $('#ServerName').val(second_to_last_part + '.local');
+
+
+  // To detect if it is public, then "raise" an error if it is.
+  last_part = parts[parts.length-1];  
+  
+  error_element = $('#errors_for_DocumentRoot');
+  if (last_part != "public") {
+    error_element.html("The path does not end in public. <br> Passenger requires DocumentRoot to be a path to a public folder.");
+    error_element.show();
+  }
+  else {
+    error_element.hide();
+  }
 }
