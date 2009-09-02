@@ -23,7 +23,7 @@ class Driver
     
     def parse_config(config)
       real_config = {}
-      config.strip.split("\n")[2..-2].map! { |l| l.strip.split(" ") }.each do |key, value|
+      config.strip.split("\n")[1..-2].map! { |l| l.strip.split(" ") }.each do |key, value|
         real_config[key] = value
       end
       real_config

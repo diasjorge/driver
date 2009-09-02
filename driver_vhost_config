@@ -1,4 +1,10 @@
 <VirtualHost *:80>
     ServerName driver.local
     DocumentRoot REPLACE_ME
+    RackEnv production
+    
+    <Directory "REPLACE_ME">
+    Order allow,deny
+    Allow from all
+  </Directory>
 </VirtualHost>
