@@ -17,32 +17,35 @@ task :install do
       exit!
     end
     # Set the config directory so we can retreive it later on.
-    config["apache_config_directory"] = File.dirname(/SERVER_CONFIG_FILE="(.*?)"/.match(`#{config["apachectl"]} -V`)[1])
-    # Mac OS X
-    if RUBY_PLATFORM =~ /darwin/
-      # Start by writing out the Driver configuration
-      driver_conf = File.join(config["apache_config_directory"], "other/driver.conf")
-      if !File.exist?(driver_conf)
-        File.open(driver_conf, "w+") do |file|
-          file.write(Driver.config)
-        end
-      end
-      
-      vhost_directory = File.join(config["apache_config_directory"] , "other/drivers")
-      config["vhost_directory"] = vhost_directory
-      
-      # Next, we add a vhost config for the app itself.
-      FileUtils.mkdir_p(vhost_directory)
+    config["apache_config_file"] = /SERVER_CONFIG_FILE="(.*?)"/.match(`#{config["apachectl"]} -V`)[1]
+    config["apache_config_directory"] = File.dirname(config["apache_config_file"])
         
-      File.open("driver_vhost_config") do |file|
-        contents = file.read
-        contents = contents.gsub("REPLACE_ME", File.join(File.expand_path(File.dirname(__FILE__)), "public"))
-        File.open(File.join(vhost_directory, "driver.#{tld}.conf"), "w+") do |vhost|
-          vhost.write(contents)
-        end
+    # Ensure the other/drivers directory exists.
+    `mkdir -p #{config["apache_config_directory"]}/other/drivers`
+    
+    # Path to where the driver config is going to be.
+    driver_conf = File.join(config["apache_config_directory"], "other/driver.conf")
+    
+    # Ensure driver config exists
+    if !File.exist?(driver_conf)
+      File.open(driver_conf, "a+") do |file|
+        file.write(Driver.config)
       end
-    else
-      # Oh, this is going to be such a large can of worms.
+    end
+    
+    # Include all the config files in the other directory.
+    if File.read(config["apache_config_file"]).grep(Regexp.new("Include #{config["apache_config_directory"]}/other/\*\.")).empty?
+      `echo "Include #{config["apache_config_directory"]}/other/*.conf" >> #{config["apache_config_file"]}`
+    end
+    
+    vhost_directory = config["vhost_directory"] = File.join(config["apache_config_directory"] , "other/drivers")
+      
+    File.open("driver_vhost_config") do |file|
+      contents = file.read
+      contents = contents.gsub("REPLACE_ME", File.join(File.expand_path(File.dirname(__FILE__)), "public"))
+      File.open(File.join(vhost_directory, "driver.#{tld}.conf"), "w+") do |vhost|
+        vhost.write(contents)
+      end
     end
     
     # Write out the config.

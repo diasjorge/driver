@@ -1,5 +1,6 @@
 --- 
 tld: local
 apachectl: apachectl
-vhost_directory: /private/etc/apache2/other/drivers
 apache_config_directory: /private/etc/apache2
+vhost_directory: /private/etc/apache2/other/drivers
+apache_config_file: /private/etc/apache2/httpd.conf
