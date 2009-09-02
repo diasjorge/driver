@@ -1,0 +1,7 @@
+<VirtualHost *:80>
+  CONFIG
+  <Directory "DIRECTORY">
+    Order allow,deny
+    Allow from all
+  </Directory>
+</VirtualHost>

@@ -28,13 +28,19 @@ class Driver
       end
       real_config
     end
+    
+    def vhost_config(config)
+      vhost = File.read("vhost_conf")
+      vhost.gsub!("CONFIG", "#{output_config(config)}")
+      vhost.gsub!("DIRECTORY", config["ServerName"].gsub(/\/public\/?$/, ''))
+    end
   
     # Ugliest method of this entire bastard application.
     # I apologise.  
     def write_config(config, password)
       # Since we can run both Rack apps and Rails apps (same thing?) through passenger, we can set both variables.
       config["RackEnv"] = config["RailsEnv"]
-      output = "<VirtualHost *:80>\n#{output_config(config)}\n</VirtualHost>".split("\n")
+      output = vhost_config.split("\n")
       # Start the sudo
       sudo_output = sudo("ls", password)
       `sudo sh -c  \"echo "" > #{config_path(config["ServerName"])}\"`
