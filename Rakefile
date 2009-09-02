@@ -6,24 +6,30 @@ task :install do
     puts "\e[0;31mThis installer must be ran by root. We promise not to do anything nasty!\e[0m"
     exit!
   else
-    config_yml = YAML::load_file("config.yml")
-    config_yml["tld"] = tld = "local"
+    config = YAML::load_file("config.yml")
+    config["tld"] = tld = "local" # See TODO at top of file
+    config["apachectl"] = if `which apachectl` != ""
+      "apachectl"
+    elsif `which apache2ctl`
+      "apache2ctl"
+    else
+      puts "Could not find apachectl! Please ensure this is in your path."
+      exit!
+    end
+    # Set the config directory so we can retreive it later on.
+    config["apache_config_directory"] = File.dirname(/SERVER_CONFIG_FILE="(.*?)"/.match(`#{config["apachectl"]} -V`)[1])
     # Mac OS X
     if RUBY_PLATFORM =~ /darwin/
-      
-      # Set the config directory so we can retreive it later on.
-      config_yml["apache_config_directory"] = "/etc/apache2"
-      
       # Start by writing out the Driver configuration
-      driver_conf = "/etc/apache2/other/driver.conf"
+      driver_conf = File.join(config["apache_config_directory"], "other/driver.conf")
       if !File.exist?(driver_conf)
         File.open(driver_conf, "w+") do |file|
           file.write(Driver.config)
         end
       end
       
-      vhost_directory = "/etc/apache2/other/drivers"
-      config_yml["vhost_directory"] = vhost_directory
+      vhost_directory = File.join(config["apache_config_directory"] , "other/drivers")
+      config["vhost_directory"] = vhost_directory
       
       # Next, we add a vhost config for the app itself.
       FileUtils.mkdir_p(vhost_directory)
@@ -40,8 +46,8 @@ task :install do
     end
     
     # Write out the config.
-    File.open("config.yml", "w+") do |config|
-      config.write(config_yml.to_yaml)
+    File.open("config.yml", "w+") do |config_out|
+      config_out.write(config.to_yaml)
     end
     
     # Ghost, do your thing!
@@ -49,7 +55,7 @@ task :install do
     `ghost add driver.local`
   
     # Apache, rollover!
-    `apachectl -k restart`
+    `#{config["apachectl"]} -k restart`
     `open http://driver.local`
   end
 end
