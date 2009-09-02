@@ -9,8 +9,8 @@ class Driver
   end
   
   class << self 
-    def config
-      File.read("driver_conf")
+    def config(options)
+      File.read("driver_conf").gsub("PATH", "#{options['apache_config_directory']}/other/*.conf")
     end
     
     def config_path(name)

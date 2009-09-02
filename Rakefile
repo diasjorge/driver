@@ -29,7 +29,7 @@ task :install do
     # Ensure driver config exists
     if !File.exist?(driver_conf)
       File.open(driver_conf, "a+") do |file|
-        file.write(Driver.config)
+        file.write(Driver.config(config))
       end
     end
     
@@ -59,6 +59,7 @@ task :install do
   
     # Apache, rollover!
     `#{config["apachectl"]} -k restart`
+    
     `open http://driver.local`
   end
 end

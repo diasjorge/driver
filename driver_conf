@@ -1,2 +1,2 @@
-Include /private/etc/apache2/other/drivers/*.conf
+Include PATH
 NameVirtualHost *:80
