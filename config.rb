@@ -40,7 +40,7 @@ class Driver
     def write_config(config, password)
       # Since we can run both Rack apps and Rails apps (same thing?) through passenger, we can set both variables.
       config["RackEnv"] = config["RailsEnv"]
-      output = vhost_config.split("\n")
+      output = vhost_config(config).split("\n")
       # Start the sudo
       sudo_output = sudo("ls", password)
       `sudo sh -c  \"echo "" > #{config_path(config["ServerName"])}\"`
