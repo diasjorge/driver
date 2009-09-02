@@ -1,9 +1,9 @@
 function selected(element, name) {
   $('#hosts li').removeClass('selected');
-  $('#' + element.id).addClass('selected');
   $.get('/edit/' + name, function(data){
     $('#config').html(data);
   });
+  $('#' + element.id).addClass('selected');
 }
 
 function display_message(data) {
@@ -23,28 +23,35 @@ function display_message(data) {
 // buttons!
 
 function new_form() {
+  $("#loading").show();
   $.get('/new', function(data){
     $('#config').html(data);
   });
+  $("#loading").hide();
 }
 
 function restart() {
+  $("#loading").show();
   $.get('/restart', function(data) {
     $('config').html(data);
   });
+  $("#loading").hide();
 }
 
 
 // actions!
 
 function update() {
+  $("#loading").show();
   post = $('#config_form').serialize();
   $.post('/update', post, function(data){
     display_message(data);
   });
+  $("#loading").hide();
 }
 
 function create() {
+  $("#loading").show();
   post = $('#config_form').serialize();
   $.post('/create', post, function(data){
     $.get('/hosts', function(hosts) {
@@ -54,9 +61,11 @@ function create() {
     });
     display_message(data);
   });
+  $("#loading").hide();
 };
 
 function remove(name) {
+  $("#loading").show();
   $.post('/delete?name=' + name, function(data) {
     display_message(data);
     $.get('/hosts', function(hosts) {
@@ -65,18 +74,24 @@ function remove(name) {
       $('#folders').hide();
     });
   });
+  $("#loading").hide();
 }
 
+// For loading the folder selector
 function folder_selector(directory) {
+  $("#loading").show();
   $("#DocumentRoot").click(function () {
     $('#folders').show();
   });
   $.get('/folders' + directory, function(data){
     $('#folders').html(data);
   });
+  $("#loading").hide();
 }
 
+// For navigations
 function enter_folder(directory) {
+  $("#loading").show();
   if (directory == "..") {
     enter_path = $('#current_path').val().split("/");
     enter_path.pop();
@@ -112,4 +127,5 @@ function enter_folder(directory) {
   else {
     error_element.hide();
   }
+  $("#loading").hide();
 }

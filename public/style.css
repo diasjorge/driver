@@ -44,6 +44,10 @@ h1 {
   width: 95%;
 }
 
+#loading {
+  display: none;
+}
+
 #hosts_container, #config, #folders {
   vertical-align: top;
 }
@@ -88,6 +92,7 @@ ul#hosts {
 
 #hosts_container {
   width: 20%;
+  text-align: center;
 }
 
 #buttons {

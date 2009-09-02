@@ -21,6 +21,7 @@
               <li id='host_<%= config[:id] %>' onclick='selected(this, "<%= config[:host] %>")'><%= config[:host] %></li>
             <% end %>
           </ul>
+          <img src='/loading.gif' id='loading'>
         </td>
         <td id='config' rowspan='2'>
           Config!
@@ -39,7 +40,7 @@
           
           <div>
             <a onclick='restart()' href='#'>
-              <img src='/restart.png' alt='Restart' title='Restart'>
+              <img src='/reload.png' alt='Restart' title='Restart'>
             </a>
           </div>
         </td>
