@@ -2,8 +2,8 @@ function selected(element, name) {
   $('#hosts li').removeClass('selected');
   $.get('/edit/' + name, function(data){
     $('#config').html(data);
+    $('#' + element.id).addClass('selected');
   });
-  $('#' + element.id).addClass('selected');
 }
 
 function display_message(data) {
